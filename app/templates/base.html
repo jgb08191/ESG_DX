@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESG-DX | 데이터 기반 기업 친환경 전환 및 고용 안정화 통합 솔루션</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span>&#127811;</span> ESG-DX
+        </div>
+        <ul class="navbar-nav">
+            <li><a href="/" class="{% if active == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+            <li><a href="/workforce" class="{% if active == 'workforce' %}active{% endif %}">Workforce Map</a></li>
+            <li><a href="/stability" class="{% if active == 'stability' %}active{% endif %}">Stability Tracker</a></li>
+            <li><a href="/safety" class="{% if active == 'safety' %}active{% endif %}">Safety Alert</a></li>
+            <li><a href="/simulation" class="{% if active == 'simulation' %}active{% endif %}">Simulation</a></li>
+        </ul>
+        <div class="navbar-right">
+            <span id="current-time"></span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        // 시간 표시
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent =
+                now.toLocaleDateString('ko-KR') + ' ' + now.toLocaleTimeString('ko-KR');
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // API 헬퍼
+        async function fetchAPI(endpoint) {
+            const res = await fetch('/api' + endpoint);
+            return res.json();
+        }
+
+        // 색상 헬퍼
+        function gradeColor(grade) {
+            if (grade.startsWith('A')) return '#0d9488';
+            if (grade.startsWith('B')) return '#1a73e8';
+            if (grade === 'C') return '#f59e0b';
+            return '#ef4444';
+        }
+
+        function riskColor(level) {
+            return { critical: '#dc2626', high: '#f59e0b', medium: '#3b82f6', low: '#0d9488' }[level] || '#64748b';
+        }
+
+        function riskBadge(level) {
+            const cls = { critical: 'badge-critical', high: 'badge-danger', medium: 'badge-warning', low: 'badge-success' }[level] || 'badge-primary';
+            const label = { critical: 'CRITICAL', high: 'HIGH', medium: 'MEDIUM', low: 'LOW' }[level] || level;
+            return `<span class="card-badge ${cls}">${label}</span>`;
+        }
+
+        // 숫자 포맷
+        function formatNumber(n) {
+            return new Intl.NumberFormat('ko-KR').format(n);
+        }
+
+        function formatCurrency(n) {
+            if (n >= 10000) return (n / 10000).toFixed(1) + '억원';
+            return formatNumber(n) + '만원';
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

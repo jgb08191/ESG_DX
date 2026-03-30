@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="section-title">&#128101; Workforce Map - 직원별 직무 전환 현황</h3>
+
+<!-- 필터 -->
+<div class="card mb-2">
+    <div class="flex gap-1 items-center">
+        <label class="text-sm fw-bold">부서 필터:</label>
+        <select id="dept-filter" class="btn btn-outline" onchange="loadEmployees()">
+            <option value="">전체 부서</option>
+        </select>
+        <span class="text-sm text-secondary" id="emp-count"></span>
+    </div>
+</div>
+
+<!-- 부서별 전환 진행 현황 -->
+<div class="grid-3" id="dept-progress-cards"></div>
+
+<!-- 직원 리스트 -->
+<div class="card mt-2">
+    <div class="card-header">
+        <span class="card-title">직원 상세 현황</span>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>부서</th>
+                <th>근속(월)</th>
+                <th>계약유형</th>
+                <th>보유 역량</th>
+                <th>교육 진행률</th>
+                <th>위험</th>
+            </tr>
+        </thead>
+        <tbody id="emp-table-body"></tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // 부서 목록 로드
+    const depts = await fetchAPI('/departments');
+    const select = document.getElementById('dept-filter');
+    for (const name of Object.keys(depts)) {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+    }
+
+    // 부서별 진행 카드
+    const gaps = await fetchAPI('/skill-pivot/gaps');
+    const cardsHtml = gaps.map(g => {
+        const progressPct = Math.round((1 - g.gap_score) * 100);
+        const color = g.gap_score > 0.7 ? '#ef4444' : (g.gap_score > 0.4 ? '#f59e0b' : '#0d9488');
+        return `
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">${g.department}</span>
+                    <span class="card-badge" style="background:${color}20;color:${color}">${g.gap_level}</span>
+                </div>
+                <div class="text-sm mb-1">&#10132; ${g.target}</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:${progressPct}%;background:${color}"></div>
+                </div>
+                <div class="flex justify-between mt-1 text-xs text-secondary">
+                    <span>전환 준비도 ${progressPct}%</span>
+                    <span>필요 역량 ${g.skills_to_acquire_count}개</span>
+                </div>
+                ${g.top_training ? `<div class="text-xs mt-1">&#128218; ${g.top_training}</div>` : ''}
+            </div>`;
+    }).join('');
+    document.getElementById('dept-progress-cards').innerHTML = cardsHtml;
+
+    loadEmployees();
+});
+
+async function loadEmployees() {
+    const dept = document.getElementById('dept-filter').value;
+    const endpoint = dept ? `/employees?department=${encodeURIComponent(dept)}` : '/employees';
+    const employees = await fetchAPI(endpoint);
+
+    document.getElementById('emp-count').textContent = `${employees.length}명`;
+
+    const tbody = document.getElementById('emp-table-body');
+    tbody.innerHTML = employees.map(e => {
+        const progressColor = e.training_progress > 60 ? '#0d9488' :
+                             (e.training_progress > 30 ? '#f59e0b' : '#ef4444');
+        return `
+            <tr>
+                <td>${e.id}</td>
+                <td>${e.name}</td>
+                <td>${e.department}</td>
+                <td>${e.tenure_months}</td>
+                <td>${e.contract_type === '기간제' ?
+                    '<span class="card-badge badge-danger">기간제</span>' :
+                    '<span class="card-badge badge-success">정규직</span>'}</td>
+                <td class="text-xs">${e.skills.join(', ')}</td>
+                <td>
+                    <div class="flex items-center gap-1">
+                        <div class="progress-bar" style="width:80px">
+                            <div class="progress-fill" style="width:${e.training_progress}%;background:${progressColor}"></div>
+                        </div>
+                        <span class="text-xs">${e.training_progress}%</span>
+                    </div>
+                </td>
+                <td>${riskBadge(e.risk_level)}</td>
+            </tr>`;
+    }).join('');
+}
+</script>
+{% endblock %}
