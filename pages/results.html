@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>진단 결과 · ESGFit</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body data-page="results" data-scope="sub">
+
+  <div id="navRoot"></div>
+
+  <section class="results-hero">
+    <div class="container">
+      <span class="diag-section-title" style="color:rgba(255,255,255,0.8);">Diagnosis Report</span>
+      <h1>ESG 진단 결과 리포트</h1>
+      <p>진단 결과와 전년 대비 변화, 개선 권고사항을 확인하세요.</p>
+    </div>
+  </section>
+
+  <section style="padding-bottom:100px;">
+    <div class="container">
+      <div class="results-grid">
+
+        <!-- Main score -->
+        <div class="result-card main">
+          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:24px;">
+            <div>
+              <div class="result-grade" id="gradeLabel">등급 B+</div>
+              <div class="result-big-score" id="mainScore">--</div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span class="delta up" id="yoyDelta">▲ +12.4%</span>
+                <span style="color:var(--text-muted); font-size:14px;">전년(2025) 대비 개선</span>
+              </div>
+            </div>
+            <div style="flex:1; min-width:280px; max-width:420px;">
+              <h3 style="margin-bottom:8px;">ESG 경영 변화 예측</h3>
+              <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">
+                권고 개선안 적용 시 예상 점수 변화입니다.
+              </p>
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:16px;">
+                <div style="text-align:center;">
+                  <div style="font-size:13px; color:var(--text-muted); margin-bottom:4px;">현재</div>
+                  <div style="font-size:32px; font-weight:800; color:var(--primary);" id="currentScore">--</div>
+                </div>
+                <div style="flex:1; text-align:center; color:var(--accent); font-size:20px;">→</div>
+                <div style="text-align:center;">
+                  <div style="font-size:13px; color:var(--text-muted); margin-bottom:4px;">개선 후 예측</div>
+                  <div style="font-size:32px; font-weight:800; color:var(--accent);" id="forecastScore">--</div>
+                </div>
+                <div style="flex:1; text-align:center;">
+                  <span class="delta up" id="forecastDelta">▲ --</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Radar chart -->
+        <div class="result-card">
+          <h3>영역별 균형 지수</h3>
+          <div class="radar-wrap">
+            <canvas id="radarChart" width="320" height="320"></canvas>
+          </div>
+        </div>
+
+        <!-- Score bars -->
+        <div class="result-card">
+          <h3>영역별 점수</h3>
+          <div class="score-bars" id="scoreBars"></div>
+          <hr style="margin:24px 0; border:none; border-top:1px solid var(--border);">
+          <h3 style="margin-bottom:12px;">업종 평균 대비</h3>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+            동종업계(관광·서비스) 평균 대비 상대 위치
+          </p>
+          <div id="industryCompare"></div>
+        </div>
+
+        <!-- YoY comparison -->
+        <div class="result-card main">
+          <h3>전년 대비 영역별 변화율</h3>
+          <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">
+            2025년 진단 결과와 비교한 올해 점수 변화입니다.
+          </p>
+          <canvas id="yoyChart" height="90"></canvas>
+        </div>
+
+        <!-- Improvements -->
+        <div class="result-card main">
+          <h3>우선 개선 권고 (AI 분석)</h3>
+          <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">
+            개선 시 점수 상승 기여도가 높은 항목입니다.
+          </p>
+          <div class="improvement-list" id="improvementList"></div>
+          <div style="display:flex; gap:8px; margin-top:28px;">
+            <a href="diagnose.html" class="btn btn-outline">진단 다시하기</a>
+            <button class="btn btn-primary" onclick="alert('PDF 리포트 다운로드 기능은 준비 중입니다.')">
+              리포트 PDF 다운로드
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div id="footerRoot"></div>
+  <div id="chatbotRoot"></div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/chatbot.js"></script>
+  <script>
+    // Load answers & compute scores (duplicated logic kept light for MVP)
+    const QUESTION_COUNTS = { P: 5, E: 17, S: 22, G: 17 };
+    const answers = JSON.parse(localStorage.getItem('esgfit_answers') || '{"P":{},"E":{},"S":{},"G":{}}');
+
+    function scoreOf(cat) {
+      const max = QUESTION_COUNTS[cat] * 4;
+      const sum = Object.values(answers[cat] || {}).reduce((a,b)=>a+b, 0);
+      return max ? Math.round((sum / max) * 100) : 0;
+    }
+
+    const scores = {
+      P: scoreOf('P'),
+      E: scoreOf('E'),
+      S: scoreOf('S'),
+      G: scoreOf('G'),
+    };
+
+    // Fallback demo data if user hasn't answered anything
+    const hasAnswers = Object.values(scores).some(v => v > 0);
+    if (!hasAnswers) {
+      scores.P = 68; scores.E = 54; scores.S = 76; scores.G = 72;
+    }
+    const total = Math.round((scores.P + scores.E + scores.S + scores.G) / 4);
+
+    // Mock last-year baseline
+    const lastYear = {
+      P: Math.max(0, scores.P - Math.round(Math.random()*15 + 5)),
+      E: Math.max(0, scores.E - Math.round(Math.random()*12 + 3)),
+      S: Math.max(0, scores.S - Math.round(Math.random()*10 + 2)),
+      G: Math.max(0, scores.G - Math.round(Math.random()*8 + 4)),
+    };
+    const lastTotal = Math.round((lastYear.P + lastYear.E + lastYear.S + lastYear.G) / 4);
+    const yoyPct = lastTotal ? (((total - lastTotal) / lastTotal) * 100).toFixed(1) : 0;
+
+    // Industry avg mock
+    const industryAvg = { P: 62, E: 58, S: 64, G: 60 };
+
+    // Grade
+    function gradeOf(s) {
+      if (s >= 90) return 'A+';
+      if (s >= 80) return 'A';
+      if (s >= 70) return 'B+';
+      if (s >= 60) return 'B';
+      if (s >= 50) return 'C+';
+      return 'C';
+    }
+
+    // Forecast: +15~20 improvement by priority actions
+    const forecast = Math.min(100, total + 18);
+    const forecastPct = (((forecast - total) / total) * 100).toFixed(1);
+
+    // Fill DOM
+    document.getElementById('mainScore').textContent = total;
+    document.getElementById('gradeLabel').textContent = '등급 ' + gradeOf(total);
+    document.getElementById('currentScore').textContent = total;
+    document.getElementById('forecastScore').textContent = forecast;
+    document.getElementById('forecastDelta').textContent = `▲ +${forecastPct}%`;
+    document.getElementById('yoyDelta').textContent = (yoyPct >= 0 ? '▲ +' : '▼ ') + yoyPct + '%';
+    document.getElementById('yoyDelta').className = yoyPct >= 0 ? 'delta up' : 'delta down';
+
+    // Score bars
+    const BAR_LABELS = { P: '정보공시', E: '환경', S: '사회', G: '지배구조' };
+    document.getElementById('scoreBars').innerHTML = ['P','E','S','G'].map(k => `
+      <div class="score-bar">
+        <div class="score-bar-label ${k.toLowerCase()}">${k}</div>
+        <div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+            <span style="color:var(--text-muted);">${BAR_LABELS[k]}</span>
+          </div>
+          <div class="score-bar-track">
+            <div class="score-bar-fill ${k.toLowerCase()}" style="width:${scores[k]}%"></div>
+          </div>
+        </div>
+        <div class="score-bar-val">${scores[k]}점</div>
+      </div>
+    `).join('');
+
+    document.getElementById('industryCompare').innerHTML = ['P','E','S','G'].map(k => {
+      const diff = scores[k] - industryAvg[k];
+      const dir = diff >= 0 ? 'up' : 'down';
+      const mark = diff >= 0 ? '▲' : '▼';
+      return `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); font-size:14px;">
+          <span>${BAR_LABELS[k]} <span style="color:var(--text-light); font-size:12px;">(업계 ${industryAvg[k]}점)</span></span>
+          <span class="delta ${dir}">${mark} ${Math.abs(diff)}점</span>
+        </div>`;
+    }).join('');
+
+    // Radar chart
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['정보공시 (P)', '환경 (E)', '사회 (S)', '지배구조 (G)'],
+        datasets: [
+          {
+            label: '우리 회사',
+            data: [scores.P, scores.E, scores.S, scores.G],
+            fill: true,
+            backgroundColor: 'rgba(0, 168, 107, 0.15)',
+            borderColor: '#00a86b',
+            borderWidth: 2,
+            pointBackgroundColor: '#00a86b',
+          },
+          {
+            label: '업계 평균',
+            data: [industryAvg.P, industryAvg.E, industryAvg.S, industryAvg.G],
+            fill: true,
+            backgroundColor: 'rgba(10, 37, 64, 0.08)',
+            borderColor: 'rgba(10, 37, 64, 0.4)',
+            borderWidth: 1,
+            pointBackgroundColor: 'rgba(10, 37, 64, 0.6)',
+            borderDash: [5, 5],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            pointLabels: { font: { size: 12, weight: '600' } },
+            grid: { color: '#e5e7eb' },
+            ticks: { display: false, stepSize: 25 },
+          },
+        },
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: 12 }, usePointStyle: true } },
+        },
+      },
+    });
+
+    // YoY bar chart
+    const yctx = document.getElementById('yoyChart').getContext('2d');
+    new Chart(yctx, {
+      type: 'bar',
+      data: {
+        labels: ['정보공시 (P)', '환경 (E)', '사회 (S)', '지배구조 (G)'],
+        datasets: [
+          {
+            label: '2025 (작년)',
+            data: [lastYear.P, lastYear.E, lastYear.S, lastYear.G],
+            backgroundColor: 'rgba(10, 37, 64, 0.25)',
+            borderRadius: 6,
+          },
+          {
+            label: '2026 (올해)',
+            data: [scores.P, scores.E, scores.S, scores.G],
+            backgroundColor: '#00a86b',
+            borderRadius: 6,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, max: 100, grid: { color: '#f3f4f6' } },
+          x: { grid: { display: false } },
+        },
+        plugins: {
+          legend: { position: 'bottom', labels: { usePointStyle: true } },
+          tooltip: {
+            callbacks: {
+              afterLabel: (ctx) => {
+                if (ctx.datasetIndex === 1) {
+                  const prev = lastYear[['P','E','S','G'][ctx.dataIndex]];
+                  const diff = ctx.parsed.y - prev;
+                  const pct = prev ? ((diff/prev)*100).toFixed(1) : '-';
+                  return `변화: ${diff >= 0 ? '+' : ''}${diff}점 (${pct}%)`;
+                }
+              }
+            }
+          }
+        },
+      },
+    });
+
+    // Improvement recommendations
+    const improvements = [
+      { cat: 'E', icon: '🌱', title: 'Scope 3 산정 체계 구축', desc: '공급망 배출량 측정 방법론 도입', impact: '+7점 예상' },
+      { cat: 'P', icon: '📋', title: 'IFRS S1·S2 기반 공시 전환', desc: '국제 공시 표준에 맞춘 리포트 양식 개편', impact: '+5점 예상' },
+      { cat: 'G', icon: '🏛️', title: 'ESG위원회 이사회 산하 설치', desc: '지속가능경영위원회 신설·정관 반영', impact: '+4점 예상' },
+      { cat: 'S', icon: '🤝', title: '협력사 ESG 평가 체계', desc: '주요 협력사 대상 연 1회 ESG 진단', impact: '+3점 예상' },
+      { cat: 'E', icon: '⚡', title: '재생에너지 사용 비율 공개', desc: '전력 구매계약(PPA) 검토 및 공시', impact: '+3점 예상' },
+    ];
+    document.getElementById('improvementList').innerHTML = improvements.map(i => `
+      <div class="improvement-item">
+        <div class="improvement-icon">${i.icon}</div>
+        <div class="improvement-text">
+          <b>[${i.cat}] ${i.title}</b>
+          <span>${i.desc}</span>
+        </div>
+        <div class="improvement-impact">${i.impact}</div>
+      </div>
+    `).join('');
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESG 뉴스 · 정부 공시 동향 · ESGFit</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body data-page="news" data-scope="sub">
+
+  <div id="navRoot"></div>
+
+  <section class="news-hero">
+    <div class="container">
+      <span class="diag-section-title">ESG News & Policy</span>
+      <h1 class="diag-title" style="font-size:40px; margin-bottom:12px;">정부 ESG 공시 동향</h1>
+      <p class="diag-desc" style="max-width:720px;">금융위·환경부·한국거래소 등 규제기관의 최신 ESG 공시 정책을 모았습니다.
+      우리 회사 경영에 직접적인 영향을 주는 규제 변화를 놓치지 마세요.</p>
+      <div class="news-filters" id="newsFilters">
+        <button class="news-filter active" data-filter="all">전체</button>
+        <button class="news-filter" data-filter="공시">공시·의무화</button>
+        <button class="news-filter" data-filter="환경">환경·탄소</button>
+        <button class="news-filter" data-filter="사회">사회·노동</button>
+        <button class="news-filter" data-filter="지배구조">지배구조</button>
+        <button class="news-filter" data-filter="금융">녹색금융</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding:60px 0 100px;">
+    <div class="container">
+      <div class="news-grid" id="newsList"></div>
+    </div>
+  </section>
+
+  <div id="footerRoot"></div>
+  <div id="chatbotRoot"></div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/chatbot.js"></script>
+  <script>
+    const NEWS = [
+      {
+        date: '2026.04.10', cat: '공시', source: '금융위원회', thumb: 'fss',
+        title: '자산 2조원 이상 상장사 ESG 공시 의무화 본격 시행',
+        excerpt: '지속가능성 공시기준(KSSB)에 따른 공시가 2026년부터 단계적으로 의무화되며, 2029년까지 전체 코스피 상장사로 확대됩니다.'
+      },
+      {
+        date: '2026.04.03', cat: '환경', source: '환경부', thumb: 'env',
+        title: '온실가스 배출권 4차 계획기간(2026~2030) 본격 가동',
+        excerpt: 'Scope 3 산정 의무가 강화되며 공급망 전반의 탄소 측정 체계 구축이 요구됩니다. 초과 배출 시 이월·차입 제도 개편도 포함.'
+      },
+      {
+        date: '2026.03.27', cat: '공시', source: '한국거래소', thumb: 'ksc',
+        title: 'ESG 공시 표준 가이던스 2.0 배포',
+        excerpt: 'IFRS S1(일반 지속가능성)·S2(기후) 기반으로 국내 상장사의 기후관련 공시 체계가 개편됩니다. 지표·목표·지배구조 공시 세부화.'
+      },
+      {
+        date: '2026.03.15', cat: '금융', source: '기획재정부', thumb: 'gov',
+        title: 'K-택소노미 3차 개정안 공개 — 원자력 전환금융 포함 확정',
+        excerpt: '녹색분류체계가 실물 경제에 본격 적용되며 녹색채권 발행 요건이 구체화됩니다. 전환금융 영역 신설로 감축 활동 범위 확대.'
+      },
+      {
+        date: '2026.03.05', cat: '환경', source: '공정거래위원회', thumb: 'fin',
+        title: '그린워싱 단속 강화 — ESG 허위·과장 광고 제재 기준 발표',
+        excerpt: '환경 관련 표시·광고의 입증자료 보유가 의무화되며 과태료 최대 5천만원이 부과됩니다. "친환경" 문구 사용 요건 구체화.'
+      },
+      {
+        date: '2026.02.22', cat: '사회', source: '고용노동부', thumb: 'law',
+        title: '중대재해처벌법 확대 적용 — 5인 이상 사업장 전면 시행',
+        excerpt: 'ESG의 S(사회) 영역 산업안전 평가 비중이 확대되며 안전보건 경영체계 구축이 필수화됩니다. 경영책임자 의무 세부 고시 발표.'
+      },
+      {
+        date: '2026.02.10', cat: '지배구조', source: '금융감독원', thumb: 'fss',
+        title: '이사회 다양성 공시 의무화 — 여성·전문성 기준 강화',
+        excerpt: '자산 1조원 이상 상장사의 이사회 다양성 공시가 의무화됩니다. 여성 이사 최소 1인, 분야별 전문성 분포 공시 필요.'
+      },
+      {
+        date: '2026.01.28', cat: '금융', source: '금융위원회', thumb: 'gov',
+        title: '스튜어드십 코드 3.0 — 기관투자자 의결권 행사 가이드 개편',
+        excerpt: 'ESG 리스크를 주주관여 활동에 명시적으로 반영하도록 개정. 국민연금·주요 자산운용사가 적극 수용 입장 발표.'
+      },
+      {
+        date: '2026.01.15', cat: '환경', source: '산업통상자원부', thumb: 'env',
+        title: 'RE100 대응 PPA 제도 개선 — 중소기업 참여 확대',
+        excerpt: '재생에너지 전력구매계약(PPA) 최소 계약 규모가 완화되어 중소·중견기업의 RE100 대응이 쉬워집니다.'
+      },
+      {
+        date: '2026.01.03', cat: '공시', source: 'K-SASB', thumb: 'ksc',
+        title: '산업별 지속가능성 공시 지표 v1.0 발표',
+        excerpt: '관광·서비스, 제조, 금융 등 11개 산업별 맞춤 지표가 확정됩니다. 동종업계 비교 가능성이 크게 향상될 전망.'
+      },
+      {
+        date: '2025.12.20', cat: '사회', source: '여성가족부', thumb: 'law',
+        title: '적극적 고용개선조치(AA) 공표 대상 확대',
+        excerpt: '상시근로자 300인 이상 사업장의 성별 고용현황·임금격차 공표가 의무화됩니다. ESG S 영역 핵심 지표로 연동.'
+      },
+      {
+        date: '2025.12.05', cat: '지배구조', source: '법무부', thumb: 'gov',
+        title: '상법 개정안 — 전자주주총회 상설화',
+        excerpt: '소액주주 권리 강화를 위한 전자주총·전자투표 상설 제도가 도입됩니다. 지배구조 평가 지표에 반영 예정.'
+      },
+    ];
+
+    function render(filter = 'all') {
+      const items = filter === 'all' ? NEWS : NEWS.filter(n => n.cat === filter);
+      document.getElementById('newsList').innerHTML = items.map(n => `
+        <article class="news-card">
+          <div class="news-thumb ${n.thumb}" data-label="${n.source}"></div>
+          <div class="news-body">
+            <div class="news-date">${n.date}</div>
+            <h3 class="news-title">${n.title}</h3>
+            <p class="news-excerpt">${n.excerpt}</p>
+            <div class="news-source">${n.source} · ${n.cat}</div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    document.getElementById('newsFilters').addEventListener('click', (e) => {
+      const btn = e.target.closest('.news-filter');
+      if (!btn) return;
+      document.querySelectorAll('.news-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render(btn.dataset.filter);
+    });
+
+    render();
+  </script>
+</body>
+</html>
