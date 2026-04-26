@@ -1,16 +1,212 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ESG DX Platform</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESGFit — 기업 맞춤형 ESG 진단 플랫폼</title>
+  <meta name="description" content="P·E·S·G 4개 영역 AI 진단으로 기업의 ESG 경영 전환을 지원합니다.">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="home" data-scope="root">
+
+  <div id="navRoot"></div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">2030 ESG 공시 의무화 대응</div>
+        <h1>지속 가능한 미래를 위한<br><span class="accent">ESG 진단 플랫폼</span></h1>
+        <pre>P·E·S·G 4개 영역을 AI가 정밀하게 진단하고, 실질적인 개선 방향을 데이터로 제시합니다. 
+          우리 회사의 ESG 현재 위치부터 확인해 보세요.</pre>
+        <div class="hero-cta">
+          <a href="pages/diagnose.html" class="btn btn-accent btn-lg">
+            종합 진단 시작하기
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="#pesg" class="btn btn-outline btn-lg">서비스 둘러보기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PESG 4 categories -->
+  <section class="section" id="pesg">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">P · E · S · G</span>
+        <h2 class="section-title">4개 영역, 정밀 진단</h2>
+        <p class="section-desc">국제 표준(GRI, SASB, TCFD)과 국내 규제를 반영한
+        4대 영역에서 우리 회사의 ESG 현주소를 진단받으세요.</p>
+      </div>
+
+      <div class="pesg-grid">
+        <a href="pages/diagnose.html?cat=P" class="pesg-card p">
+          <div class="pesg-icon">P</div>
+          <h3>정보공시</h3>
+          <p>ESG 정보의 공시 형식과 내용의 충실도, 제3자 검증 수준을 진단합니다. 2030 공시 의무화 대응이 핵심입니다.</p>
+          <span class="pesg-link">진단 시작 →</span>
+        </a>
+        <a href="pages/diagnose.html?cat=E" class="pesg-card e">
+          <div class="pesg-icon">E</div>
+          <h3>환경</h3>
+          <p>온실가스 배출(Scope 1·2·3), 에너지·용수 사용, 폐기물, 오염물질 저감 등 환경 경영 성과를 측정합니다.</p>
+          <span class="pesg-link">진단 시작 →</span>
+        </a>
+        <a href="pages/diagnose.html?cat=S" class="pesg-card s">
+          <div class="pesg-icon">S</div>
+          <h3>사회</h3>
+          <p>공정 채용, 다양성, 산업 안전, 인권 경영, 지역사회 기여 등 사회적 책임 이행 수준을 평가합니다.</p>
+          <span class="pesg-link">진단 시작 →</span>
+        </a>
+        <a href="pages/diagnose.html?cat=G" class="pesg-card g">
+          <div class="pesg-icon">G</div>
+          <h3>지배구조</h3>
+          <p>이사회 독립성, 주주권리 보호, 윤리·준법, 리스크 관리 등 건전한 지배구조 체계를 진단합니다.</p>
+          <span class="pesg-link">진단 시작 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section features-section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">왜 ESGFit인가</span>
+        <h2 class="section-title">데이터 기반의 실질적 개선</h2>
+        <p class="section-desc">진단에서 끝나지 않습니다. ESG 경영으로 얼마나 변화할 수 있는지
+        수치로 확인하고, 개선 로드맵까지 받아보세요.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-num">01</div>
+          <h4>AI 기반 정밀 진단</h4>
+          <p>142개 지표를 AI가 자동 분석하여
+          업종·규모별로 맞춤화된 ESG 점수를 산출합니다.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">02</div>
+          <h4>작년 대비 변화율 시각화</h4>
+          <p>전년 대비 개선된 영역을 %로 직관적으로 표시하고,
+          개선이 필요한 영역을 자동 식별합니다.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">03</div>
+          <h4>업종 평균 비교</h4>
+          <p>동종업계 평균 대비 우리 회사의 상대적 위치를
+          백분위로 제공합니다.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">04</div>
+          <h4>실천 가능한 개선안</h4>
+          <p>각 영역별 구체적 액션 아이템과 예상 점수 상승폭을
+          함께 제공하여 실행 우선순위를 정합니다.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">05</div>
+          <h4>공시 리포트 자동화</h4>
+          <p>K-ESG 가이드라인에 맞춘 공시 리포트 초안을
+          자동 생성해 공시 준비 부담을 줄입니다.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">06</div>
+          <h4>AI 챗봇 상담</h4>
+          <p>우측 하단 챗봇으로 ESG 관련 궁금증을 24시간 즉시 해결합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- News -->
+  <section class="section" id="news">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">ESG 뉴스</span>
+        <h2 class="section-title">정부 ESG 공시 동향</h2>
+        <p class="section-desc">대한민국 정부와 규제기관의 최신 ESG 정책·공시 정보를
+        한눈에 확인하세요.</p>
+      </div>
+
+      <div class="news-grid">
+        <a href="pages/news.html" class="news-card">
+          <div class="news-thumb fss" data-label="금융위원회"></div>
+          <div class="news-body">
+            <div class="news-date">2026.04.10</div>
+            <h3 class="news-title">금융위, 2026년 자산 2조원 이상 상장사 ESG 공시 의무화 시행</h3>
+            <p class="news-excerpt">지속가능성 공시기준(KSSB)에 따른 공시가 올해부터 단계적으로 의무화됩니다.</p>
+            <div class="news-source">금융위원회</div>
+          </div>
+        </a>
+        <a href="pages/news.html" class="news-card">
+          <div class="news-thumb env" data-label="환경부"></div>
+          <div class="news-body">
+            <div class="news-date">2026.04.03</div>
+            <h3 class="news-title">환경부, 온실가스 배출권 4차 계획기간(2026~2030) 본격 가동</h3>
+            <p class="news-excerpt">Scope 3 산정 의무가 강화되며 공급망 전반의 탄소 측정 체계가 요구됩니다.</p>
+            <div class="news-source">환경부</div>
+          </div>
+        </a>
+        <a href="pages/news.html" class="news-card">
+          <div class="news-thumb ksc" data-label="KRX"></div>
+          <div class="news-body">
+            <div class="news-date">2026.03.27</div>
+            <h3 class="news-title">한국거래소, ESG 공시 표준 가이던스 2.0 배포</h3>
+            <p class="news-excerpt">IFRS S1·S2 기반으로 국내 상장사의 기후관련 공시 체계가 개편됩니다.</p>
+            <div class="news-source">한국거래소</div>
+          </div>
+        </a>
+        <a href="pages/news.html" class="news-card">
+          <div class="news-thumb gov" data-label="기획재정부"></div>
+          <div class="news-body">
+            <div class="news-date">2026.03.15</div>
+            <h3 class="news-title">K-택소노미 3차 개정안 공개 — 원자력 전환금융 포함 확정</h3>
+            <p class="news-excerpt">녹색분류체계가 실물 경제에 본격 적용되며 녹색채권 발행 요건이 구체화됩니다.</p>
+            <div class="news-source">기획재정부</div>
+          </div>
+        </a>
+        <a href="pages/news.html" class="news-card">
+          <div class="news-thumb fin" data-label="공정위"></div>
+          <div class="news-body">
+            <div class="news-date">2026.03.05</div>
+            <h3 class="news-title">공정위, 그린워싱 단속 강화 — ESG 허위·과장 광고 제재 기준 발표</h3>
+            <p class="news-excerpt">환경 관련 표시·광고의 입증자료 보유가 의무화되며 과태료 최대 5천만원이 부과됩니다.</p>
+            <div class="news-source">공정거래위원회</div>
+          </div>
+        </a>
+        <a href="pages/news.html" class="news-card">
+          <div class="news-thumb law" data-label="고용부"></div>
+          <div class="news-body">
+            <div class="news-date">2026.02.22</div>
+            <h3 class="news-title">중대재해처벌법 확대 적용 — 5인 이상 사업장 전면 시행</h3>
+            <p class="news-excerpt">ESG의 S(사회) 영역 산업안전 평가 비중이 확대되며 안전보건 경영체계 구축이 필수화됩니다.</p>
+            <div class="news-source">고용노동부</div>
+          </div>
+        </a>
+      </div>
+
+      <div style="text-align:center; margin-top:48px;">
+        <a href="pages/news.html" class="btn btn-outline">전체 뉴스 보기 →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA band -->
+  <section class="cta-band">
+    <div class="container cta-band-content">
+      <h2>지금 바로 ESG 진단을 시작하세요</h2>
+      <p>회원가입 후 10분이면 우리 회사의 ESG 현주소를 확인할 수 있습니다.</p>
+      <a href="pages/login.html?tab=signup" class="btn btn-accent btn-lg">무료로 시작하기</a>
+    </div>
+  </section>
+
+  <div id="footerRoot"></div>
+  <div id="chatbotRoot"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/chatbot.js"></script>
+</body>
 </html>

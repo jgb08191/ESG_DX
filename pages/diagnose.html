@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESG 진단 · ESGFit</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body data-page="diagnose" data-scope="sub">
+
+  <div id="navRoot"></div>
+
+  <section class="diag-hero">
+    <div class="container">
+      <span class="diag-section-title">ESG Diagnosis</span>
+      <h1 class="diag-title" style="font-size:40px; margin-bottom:12px;">우리 회사 ESG 진단</h1>
+      <p class="diag-desc" style="max-width:720px;">K-ESG 가이드라인 · ISO 26000 · 중소벤처기업부 가이드라인을 통합한
+      <b>61개 기본진단항목</b>(P 5 · E 17 · S 22 · G 17)에 답변하시면 영역별 점수와 종합 결과,
+      개선 우선순위를 확인하실 수 있습니다. 각 문항은 1~5단계 성숙도 기준으로 평가합니다.</p>
+      <div class="diag-tabs" id="diagTabs"></div>
+    </div>
+  </section>
+
+  <section class="diag-body" id="diagBody">
+    <div class="container">
+      <div class="diag-layout">
+        <main>
+          <span class="diag-section-title" id="diagCatLabel"></span>
+          <h2 class="diag-title" id="diagTitle"></h2>
+          <p class="diag-desc" id="diagDesc"></p>
+          <div class="diag-card" id="diagList"></div>
+        </main>
+
+        <aside class="diag-sidebar">
+          <div class="diag-progress-card">
+            <h4>현재 종합 점수</h4>
+            <div class="diag-progress-score" id="sbScore">0<span> / 100</span></div>
+            <div class="diag-progress-bar">
+              <div class="diag-progress-fill" id="sbFill"></div>
+            </div>
+            <div class="diag-progress-text" id="sbProgress">0 / 61 문항 응답 완료</div>
+          </div>
+
+          <div class="diag-summary">
+            <h4>영역별 점수</h4>
+            <div id="sbSummary"></div>
+            <div style="margin-top:20px; display:flex; flex-direction:column; gap:8px;">
+              <button id="finishBtn" class="btn btn-outline btn-block" style="width:100%;">중간 결과 보기</button>
+              <button id="resetBtn" class="btn btn-ghost" style="width:100%; font-size:13px; color:var(--text-muted);">응답 초기화</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div id="footerRoot"></div>
+  <div id="chatbotRoot"></div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/diagnose.js"></script>
+</body>
+</html>
