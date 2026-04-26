@@ -220,7 +220,7 @@ http://localhost:3000 에서 애플리케이션을 사용할 수 있습니다.
 
 ### 5. 외부 도메인 연결
 - 서버는 `0.0.0.0`으로 바인딩되어 로컬 네트워크 외부에서도 접근 가능합니다.
-- 기본 CORS 허용 도메인은 `https://내도메인.한국`이며, 필요 시 `.env`에 `CORS_ORIGIN` 값을 설정할 수 있습니다.
+- 기본 CORS 허용 도메인은 `http://esgfit.kro.kr`이며, 필요 시 `.env`에 `CORS_ORIGIN` 값을 설정할 수 있습니다.
 - Netlify Functions 전환 시 `server.js`의 `app` 객체를 그대로 재사용할 수 있습니다.
 
 ---
