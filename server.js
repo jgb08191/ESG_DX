@@ -8,8 +8,11 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 const host = '0.0.0.0';
-const allowedOrigin = process.env.CORS_ORIGIN || 'http://esgfit.kro.kr';
-
+const allowedOrigin = [
+  'http://esgfit.kro.kr',
+  'http://www.esgfit.kro.kr', // www 포함 주소 허용
+  'http://localhost:3000'      // 로컬 테스트 허용
+];
 // Middleware
 app.use(helmet());
 app.use(cors({

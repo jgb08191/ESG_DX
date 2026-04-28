@@ -197,31 +197,44 @@ ESG_DX/
 
 ---
 
-## � 실행 방법
+## 🚀 실행 방법
 
-### 1. 의존성 설치
+### 1. 필수 환경 설정
+1. 프로젝트 루트에 `.env` 파일을 생성합니다.
+2. 다음 항목을 설정하세요:
+```bash
+GOOGLE_API_KEY=your_actual_api_key_here
+```
+3. 이 프로젝트는 Node.js + Express 백엔드를 사용하며, Gemini 2.5 Flash-Lite API를 호출하기 위한 Google API 키가 필요합니다.
+
+### 2. Node.js 패키지 설치
 ```bash
 npm install
 ```
 
-### 2. 환경 변수 설정
-`.env` 파일을 열고 Google Gemini API 키를 입력하세요:
-```
-GOOGLE_API_KEY=your_actual_api_key_here
-```
-
-### 3. 서버 실행
+### 3. 로컬 서버 실행
 ```bash
 npm start
 ```
+- 서버는 기본적으로 `3000` 포트에서 실행됩니다.
+- 브라우저에서 `http://localhost:3000`으로 접속하면 애플리케이션을 확인할 수 있습니다.
 
-### 4. 브라우저에서 접속
-http://localhost:3000 에서 애플리케이션을 사용할 수 있습니다.
+### 4. ngrok 터널링 및 외부 도메인 연결
+1. ngrok을 사용해 로컬 서버를 외부에 노출합니다:
+```bash
+ngrok http 3000 --disable-update-check
+```
+2. ngrok이 실행되면 콘솔에 생성된 `https://...ngrok-free.dev` 주소를 확인합니다.
+3. 실제 배포에서는 `www.esgfit.kro.kr` 도메인을 해당 ngrok 주소로 연결했습니다.
+   - 이때 `웹 포워딩` 대신 DNS의 `CNAME 별칭` 기능을 사용해 연결한 점이 핵심입니다.
+   - `www.esgfit.kro.kr`을 ngrok에서 제공한 `https://...ngrok-free.dev` 주소로 CNAME 설정합니다.
 
-### 5. 외부 도메인 연결
-- 서버는 `0.0.0.0`으로 바인딩되어 로컬 네트워크 외부에서도 접근 가능합니다.
-- 기본 CORS 허용 도메인은 `http://esgfit.kro.kr`이며, 필요 시 `.env`에 `CORS_ORIGIN` 값을 설정할 수 있습니다.
-- Netlify Functions 전환 시 `server.js`의 `app` 객체를 그대로 재사용할 수 있습니다.
+### 5. 주의사항
+- ngrok 무료 버전은 매번 실행할 때마다 주소가 변경됩니다. 따라서 ngrok을 재시작하면 새 주소로 DNS `CNAME`을 다시 업데이트해야 합니다.
+- 보안 설정을 위해 `server.js`의 CORS 설정은 다음 중 하나여야 합니다:
+  - `origin: '*'`로 전체 허용
+  - 또는 실행 중인 ngrok 주소(`https://...ngrok-free.dev`)를 특정 허용
+- `server.js`가 `0.0.0.0`으로 바인딩되어 있어야 외부에서 접근 가능합니다.
 
 ---
 
